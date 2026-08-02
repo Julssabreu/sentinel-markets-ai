@@ -1,7 +1,7 @@
 const { contextBridge } = require('electron');
 contextBridge.exposeInMainWorld('sentinel', {
   platform: process.platform,
-  version: '0.3.1',
+  version: '0.3.2',
   getMarketSnapshot: () => require('electron').ipcRenderer.invoke('market:snapshot'),
   getMacroSnapshot: () => require('electron').ipcRenderer.invoke('macro:snapshot'),
   getNewsSnapshot: () => require('electron').ipcRenderer.invoke('news:snapshot'),
@@ -12,6 +12,7 @@ contextBridge.exposeInMainWorld('sentinel', {
   acknowledgeAlert: id => require('electron').ipcRenderer.invoke('alerts:acknowledge', id),
   getWatchlists: () => require('electron').ipcRenderer.invoke('watchlists:get'),
   saveWatchlists: config => require('electron').ipcRenderer.invoke('watchlists:save', config),
+  setUiZoom: factor => { const value=Math.max(.8,Math.min(1.4,Number(factor)||1));require('electron').webFrame.setZoomFactor(value);return value },
   startCryptoFlow: symbol => require('electron').ipcRenderer.invoke('crypto:flow-start', symbol),
   stopCryptoFlow: symbol => require('electron').ipcRenderer.invoke('crypto:flow-stop', symbol),
   getCryptoFlowSnapshot: symbol => require('electron').ipcRenderer.invoke('crypto:flow-snapshot', symbol),

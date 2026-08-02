@@ -31,6 +31,7 @@ interface Window {
     acknowledgeAlert: (id:string) => Promise<{ok:boolean;record:SentinelAlertRecord|null}>;
     getWatchlists: () => Promise<{ok:boolean;config:WatchlistConfig}>;
     saveWatchlists: (config:WatchlistConfig) => Promise<{ok:boolean;config:WatchlistConfig}>;
+    setUiZoom: (factor:number) => number;
     startCryptoFlow: (symbol:string) => Promise<CryptoFlowSnapshot>;
     stopCryptoFlow: (symbol:string) => Promise<{ok:boolean;symbol:string}>;
     getCryptoFlowSnapshot: (symbol:string) => Promise<CryptoFlowSnapshot>;
