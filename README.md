@@ -2,7 +2,7 @@
 
 Ubicacion oficial de desarrollo: `C:\Users\ADMIN\Desktop\sentinel market ai\source`.
 
-## Estado 0.2.0
+## Estado 0.3.0
 
 - Primera capa segura de datos reales mediante IPC de Electron.
 - BTC/USD: precio y variacion de 24 horas desde Binance Spot (endpoint publico de solo mercado).

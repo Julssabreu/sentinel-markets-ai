@@ -57,7 +57,7 @@ export default function App(){
   return <div className={`app ${sidebar?'':'collapsed'}`}>
     <aside className="sidebar"><div className="brand"><div className="brand-mark"><Globe2 size={22}/></div><div><b>SENTINEL</b><span>MARKETS AI</span></div></div>
       <nav>{nav.map(([label,Icon])=><button key={label} className={active===label?'active':''} onClick={()=>setActive(label)}><Icon size={18}/><span>{label}</span></button>)}</nav>
-      <div className="sidebar-foot"><div className={`status-dot ${dataState}`}/><div><b>Modo híbrido 0.2</b><span>{dataMessage}</span></div><Settings size={17}/></div>
+      <div className="sidebar-foot"><div className={`status-dot ${dataState}`}/><div><b>Modo investigación 0.3</b><span>{dataMessage}</span></div><Settings size={17}/></div>
     </aside>
     <main>
       <header><button className="icon-btn" onClick={()=>setSidebar(!sidebar)}><Menu size={20}/></button><div className="search"><Search size={18}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Buscar activo, mercado o símbolo..."/><kbd>Ctrl K</kbd></div><div className="header-actions"><span className={`demo-pill ${dataState}`}><Database size={14}/> {dataState==='live'?'DATOS REALES':dataState==='partial'?'DATOS MIXTOS':dataState==='loading'?'ACTUALIZANDO':'MODO HÍBRIDO'}</span><button className={`icon-btn alert-bell ${alertMonitor.criticalCount?'critical':''}`} title={`${alertMonitor.activeCount} alertas activas`} onClick={()=>setActive('Alertas')}><Bell size={19}/>{alertMonitor.activeCount?<strong>{alertMonitor.activeCount>99?'99+':alertMonitor.activeCount}</strong>:null}</button><div className="avatar">JA</div></div></header>

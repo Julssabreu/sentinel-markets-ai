@@ -1,6 +1,6 @@
 {
   "name": "sentinel-markets-ai",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "description": "Centro de Análisis Financiero Personal Global",
@@ -35,13 +35,34 @@
   "build": {
     "appId": "com.julssbot.sentinelmarkets",
     "productName": "Sentinel Markets AI",
-    "directories": { "output": "release" },
-    "files": ["dist/**/*", "electron/**/*", "shared/**/*", "package.json"],
-    "extraResources": [
-      { "from": "services", "to": "services" },
-      { "from": "integrations/mt5", "to": "integrations/mt5", "filter": ["SentinelAtomicReader.ex5"] }
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "shared/**/*",
+      "package.json"
     ],
-    "win": { "target": "nsis" },
-    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true }
+    "extraResources": [
+      {
+        "from": "services",
+        "to": "services"
+      },
+      {
+        "from": "integrations/mt5",
+        "to": "integrations/mt5",
+        "filter": [
+          "SentinelAtomicReader.ex5"
+        ]
+      }
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }
