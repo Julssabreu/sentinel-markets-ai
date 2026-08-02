@@ -4,7 +4,8 @@ export type CompetingStrategy =
   | "BREAKOUT_STRUCTURE_ATR"
   | "TREND_MOMENTUM"
   | "MEAN_REVERSION"
-  | "VOLATILITY_EXPANSION";
+  | "VOLATILITY_EXPANSION"
+  | "SUPPLY_DEMAND_FIB_VOLUME";
 export interface CompetitionRow {
   strategy: CompetingStrategy;
   name: string;
@@ -74,6 +75,14 @@ function signalFor(
       return { side: 1, entry: high, stopAtr: 1.3, reward: 2.2 };
     if (compressed && bar.low <= low)
       return { side: -1, entry: low, stopAtr: 1.3, reward: 2.2 };
+  }
+  if (strategy === "SUPPLY_DEMAND_FIB_VOLUME") {
+    const structure=previous.slice(-60),swingHigh=Math.max(...structure.map(x=>x.high)),swingLow=Math.min(...structure.map(x=>x.low)),range=swingHigh-swingLow;
+    if(range<=0)return null;
+    const volumes=previous.slice(-30).map(x=>Number(x.realVolume||x.tickVolume||0)),averageVolume=volumes.reduce((sum,value)=>sum+value,0)/Math.max(1,volumes.length),barVolume=Number(bar.realVolume||bar.tickVolume||0),volumeConfirmed=averageVolume<=0||barVolume>=averageVolume*1.1;
+    const demandTop=swingHigh-range*.5,demandBottom=swingHigh-range*.786,supplyBottom=swingLow+range*.5,supplyTop=swingLow+range*.786,bullishRejection=bar.close>bar.open&&bar.close>bar.low+(bar.high-bar.low)*.55,bearishRejection=bar.close<bar.open&&bar.close<bar.low+(bar.high-bar.low)*.45;
+    if(e20>e50&&bar.low<=demandTop&&bar.low>=demandBottom&&bullishRejection&&volumeConfirmed)return{side:1,entry:bar.close,stopAtr:1.25,reward:2.4};
+    if(e20<e50&&bar.high>=supplyBottom&&bar.high<=supplyTop&&bearishRejection&&volumeConfirmed)return{side:-1,entry:bar.close,stopAtr:1.25,reward:2.4};
   }
   return null;
 }
@@ -149,12 +158,14 @@ export function compareStrategies(c: Candle[]): CompetitionRow[] {
       "TREND_MOMENTUM",
       "MEAN_REVERSION",
       "VOLATILITY_EXPANSION",
+      "SUPPLY_DEMAND_FIB_VOLUME",
     ],
     names: Record<CompetingStrategy, string> = {
       BREAKOUT_STRUCTURE_ATR: "Ruptura estructural + ATR",
       TREND_MOMENTUM: "Tendencia y momentum",
       MEAN_REVERSION: "Reversión a la media",
       VOLATILITY_EXPANSION: "Expansión de volatilidad",
+      SUPPLY_DEMAND_FIB_VOLUME: "Supply & Demand + Fibonacci + volumen",
     };
   const train = Math.floor(c.length * 0.45),
     test = Math.floor(c.length * 0.15),

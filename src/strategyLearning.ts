@@ -15,5 +15,6 @@ export const STRATEGY_CATALOG=[
  {id:'TREND_MOMENTUM',name:'Tendencia y momentum',status:'PLANNED',weight:0},
  {id:'MEAN_REVERSION',name:'Reversión a la media',status:'PLANNED',weight:0},
  {id:'VOLATILITY_EXPANSION',name:'Expansión de volatilidad',status:'PLANNED',weight:0},
+ {id:'SUPPLY_DEMAND_FIB_VOLUME',name:'Supply & Demand + Fibonacci + volumen',status:'ACTIVE_RESEARCH',weight:0},
  {id:'MACRO_INTERMARKET',name:'Macro e intermercado',status:'PLANNED',weight:0}
 ] as const;

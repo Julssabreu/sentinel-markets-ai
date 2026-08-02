@@ -1,7 +1,7 @@
 const { contextBridge } = require('electron');
 contextBridge.exposeInMainWorld('sentinel', {
   platform: process.platform,
-  version: '0.3.2',
+  version: '0.3.3',
   getMarketSnapshot: () => require('electron').ipcRenderer.invoke('market:snapshot'),
   getMacroSnapshot: () => require('electron').ipcRenderer.invoke('macro:snapshot'),
   getNewsSnapshot: () => require('electron').ipcRenderer.invoke('news:snapshot'),
