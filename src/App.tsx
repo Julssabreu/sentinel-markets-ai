@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Area, AreaChart, ResponsiveContainer } from 'recharts';
-import { Activity, Bell, BookOpen, Bot, BriefcaseBusiness, Calculator, ChevronRight, CircleHelp, Clock3, Database, Gauge, Globe2, History, LayoutDashboard, Menu, MessageSquareText, Newspaper, Search, Settings, ShieldCheck, Sparkles, Target, TrendingUp, X } from 'lucide-react';
+import { Activity, Bell, BookOpen, Bot, BriefcaseBusiness, Calculator, ChevronRight, CircleHelp, Clock3, Database, Eye, Gauge, Globe2, History, LayoutDashboard, Menu, MessageSquareText, Newspaper, Search, Settings, ShieldCheck, Sparkles, Target, TrendingUp, X } from 'lucide-react';
 import { historySeed, marketPulse, opportunities } from './data';
 import { calculateRisk } from './engine';
 import { mergeLiveSnapshot, type DataState } from './liveData';
@@ -12,12 +12,13 @@ import ScannerWorkspace from './ScannerWorkspace';
 import JulssbotChat from './JulssbotChat';
 import PortfolioWorkspace from './PortfolioWorkspace';
 import AlertWorkspace from './AlertWorkspace';
+import WatchlistWorkspace from './WatchlistWorkspace';
 import { useAlertMonitor } from './useAlertMonitor';
 
 const nav = [
   ['Centro global', LayoutDashboard], ['Oportunidades', Target], ['Analizar activo', Activity], ['Estrategias', Gauge],
   ['Riesgo', Calculator], ['Cartera', BriefcaseBusiness], ['Noticias y macro', Newspaper], ['Julssbot AI', MessageSquareText],
-  ['Alertas', Bell], ['Historial', History], ['Laboratorio', BookOpen]
+  ['Alertas', Bell], ['Listas de vigilancia', Eye], ['Historial', History], ['Laboratorio', BookOpen]
 ] as const;
 
 const decisionClass: Record<string,string> = { BUY:'buy', SELL:'sell', ESPERAR:'wait', ACUMULAR:'accumulate', 'NO ENTRAR':'avoid' };
@@ -61,7 +62,7 @@ export default function App(){
     <main>
       <header><button className="icon-btn" onClick={()=>setSidebar(!sidebar)}><Menu size={20}/></button><div className="search"><Search size={18}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Buscar activo, mercado o símbolo..."/><kbd>Ctrl K</kbd></div><div className="header-actions"><span className={`demo-pill ${dataState}`}><Database size={14}/> {dataState==='live'?'DATOS REALES':dataState==='partial'?'DATOS MIXTOS':dataState==='loading'?'ACTUALIZANDO':'MODO HÍBRIDO'}</span><button className={`icon-btn alert-bell ${alertMonitor.criticalCount?'critical':''}`} title={`${alertMonitor.activeCount} alertas activas`} onClick={()=>setActive('Alertas')}><Bell size={19}/>{alertMonitor.activeCount?<strong>{alertMonitor.activeCount>99?'99+':alertMonitor.activeCount}</strong>:null}</button><div className="avatar">JA</div></div></header>
       <section className="content">
-        {active==='Analizar activo'?<AnalysisWorkspace initialSymbol={selectedSymbol}/>:active==='Oportunidades'?<ScannerWorkspace onAnalyze={value=>{setSelectedSymbol(value);setActive('Analizar activo')}}/>:active==='Julssbot AI'?<JulssbotChat symbol={selectedSymbol}/>:active==='Cartera'?<PortfolioWorkspace/>:active==='Noticias y macro'?<MacroWorkspace/>:active==='Alertas'?<AlertWorkspace/>:active==='Historial'?<HistoryWorkspace/>:active==='Laboratorio'?<LaboratoryWorkspace/>:<>
+        {active==='Analizar activo'?<AnalysisWorkspace initialSymbol={selectedSymbol}/>:active==='Oportunidades'?<ScannerWorkspace onAnalyze={value=>{setSelectedSymbol(value);setActive('Analizar activo')}}/>:active==='Julssbot AI'?<JulssbotChat symbol={selectedSymbol}/>:active==='Cartera'?<PortfolioWorkspace/>:active==='Noticias y macro'?<MacroWorkspace/>:active==='Alertas'?<AlertWorkspace/>:active==='Listas de vigilancia'?<WatchlistWorkspace/>:active==='Historial'?<HistoryWorkspace/>:active==='Laboratorio'?<LaboratoryWorkspace/>:<>
         <div className="welcome"><div><p className="eyebrow">CENTRO DE MANDO GLOBAL</p><h1>Buenos días, Julio.</h1><p>Precios reales iniciales; señales y análisis aún demostrativos y separados.</p></div><div className="last-update"><Clock3 size={16}/><span>Última consulta<br/><b>{snapshot?new Date(snapshot.checkedAt).toLocaleTimeString('es-BO'):dataMessage}</b></span><button onClick={refreshMarketData} disabled={dataState==='loading'}>{dataState==='loading'?'Actualizando...':'Actualizar datos'}</button></div></div>
         <div className="pulse-grid">{marketPulse.map(([k,v,c])=><div className="pulse" key={k}><span>{k}</span><b className={c}>{v}</b><div className={`pulse-line ${c}`}/></div>)}</div>
         <div className="section-title"><div><h2>Radar de oportunidades</h2><p>Clasificación multi-activo según consenso, entrada y riesgo.</p></div><button className="text-btn" onClick={()=>setActive('Oportunidades')}>Ver escáner completo <ChevronRight size={16}/></button></div>

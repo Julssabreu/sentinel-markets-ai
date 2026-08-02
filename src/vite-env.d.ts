@@ -29,6 +29,8 @@ interface Window {
     listAlerts: () => Promise<{ok:boolean;records:SentinelAlertRecord[]}>;
     upsertAlerts: (alerts:SentinelAlertCandidate[]) => Promise<{ok:boolean;records:SentinelAlertRecord[]}>;
     acknowledgeAlert: (id:string) => Promise<{ok:boolean;record:SentinelAlertRecord|null}>;
+    getWatchlists: () => Promise<{ok:boolean;config:WatchlistConfig}>;
+    saveWatchlists: (config:WatchlistConfig) => Promise<{ok:boolean;config:WatchlistConfig}>;
     startCryptoFlow: (symbol:string) => Promise<CryptoFlowSnapshot>;
     stopCryptoFlow: (symbol:string) => Promise<{ok:boolean;symbol:string}>;
     getCryptoFlowSnapshot: (symbol:string) => Promise<CryptoFlowSnapshot>;
@@ -63,6 +65,8 @@ interface InstitutionalFactorSnapshot { checkedAt:string; realYields:{date:strin
 interface CryptoFlowSnapshot { ok:boolean;symbol:string;status:string;connected:boolean;startedAt:string;observedAt:string|null;lastTradeAt:string|null;lastLiquidationAt:string|null;lastBookAt:string|null;tradeCount:number;buyNotional:number;sellNotional:number;takerImbalance:number;liquidationCount:number;longLiquidationNotional:number;shortLiquidationNotional:number;liquidationImbalance:number;bid:number|null;ask:number|null;spreadBps:number|null;reconnects:number;source:string;permissions:string }
 interface SentinelAlertCandidate { fingerprint:string;category:'MACRO'|'INSTITUTIONAL'|'MICROSTRUCTURE'|'CRYPTO_FLOW'|'DATA';severity:'INFO'|'VIGILAR'|'ALTA'|'CRITICA';symbol:string|null;title:string;details:string;source:string;expiresAt:string|null }
 interface SentinelAlertRecord extends SentinelAlertCandidate { id:string;createdAt:string;lastSeenAt:string;acknowledgedAt?:string;count:number;status:'ACTIVE'|'ACKNOWLEDGED';schemaVersion:number }
+interface SentinelWatchlist { id:string;name:string;symbols:string[];enabled:boolean }
+interface WatchlistConfig { schemaVersion:1;activeListId:string;intervalMinutes:number;lists:SentinelWatchlist[] }
 interface Mt5MicrostructureResponse { ok:boolean; requested:string; symbol:string; windowMinutes:number; tickCount:number; midObservations:number; spreadPointsCurrent:number|null; spreadPointsMean:number|null; spreadPointsMax:number|null; tickImbalance:number; tradeFlagImbalance:number|null; buyTradeFlags:number; sellTradeFlags:number; realVolume:number; depthAvailable:boolean; depth:{type:number;price:number;volume:number}[]; buyDepth:number; sellDepth:number; depthImbalance:number|null; quality:'REAL_TRADES_AND_DOM'|'BROKER_TICKS_AND_OPTIONAL_DOM'; observedAt:string; source:string; permissions:string; error?:string; detail?:string }
 interface AnalysisHistoryRecord { id:string; createdAt:string; schemaVersion:number; symbol:string; brokerSymbol:string; timeframe:string; decision:string; confidence:number; technicalConfidence:number; alignment:number; eventAction:string; blockingEvent:string|null; regime?:string; strategy?:string; modelId?:string; modelVersion?:string; modelFingerprint?:string; dataCheckedAt?:string; dataQualityScore?:number; dataWarnings?:string[]; evidenceHash?:string; plan:{direction:string|null;trigger:number|null;stop:number|null;tp1:number|null;tp2:number|null}|null; sources:string[]; outcome:null|{status:string;checkedAt:string;activatedAt?:string;resolvedAt?:string;mfe?:number;mae?:number;tp1Reached?:boolean;notes?:string} }
 

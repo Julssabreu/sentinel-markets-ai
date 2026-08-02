@@ -10,6 +10,8 @@ contextBridge.exposeInMainWorld('sentinel', {
   listAlerts: () => require('electron').ipcRenderer.invoke('alerts:list'),
   upsertAlerts: alerts => require('electron').ipcRenderer.invoke('alerts:upsert', alerts),
   acknowledgeAlert: id => require('electron').ipcRenderer.invoke('alerts:acknowledge', id),
+  getWatchlists: () => require('electron').ipcRenderer.invoke('watchlists:get'),
+  saveWatchlists: config => require('electron').ipcRenderer.invoke('watchlists:save', config),
   startCryptoFlow: symbol => require('electron').ipcRenderer.invoke('crypto:flow-start', symbol),
   stopCryptoFlow: symbol => require('electron').ipcRenderer.invoke('crypto:flow-stop', symbol),
   getCryptoFlowSnapshot: symbol => require('electron').ipcRenderer.invoke('crypto:flow-snapshot', symbol),
