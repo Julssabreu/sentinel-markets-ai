@@ -1,0 +1,2 @@
+import{describe,expect,it}from'vitest';import{assessTickFreshness}from'./dataFreshness';
+describe('tick freshness',()=>{const now=new Date('2026-08-02T06:00:00Z');it('acepta tick reciente',()=>expect(assessTickFreshness('2026-08-02T05:55:00Z',now).fresh).toBe(true));it('bloquea tick viejo',()=>expect(assessTickFreshness('2026-08-01T23:00:00Z',now).fresh).toBe(false));it('bloquea hora inválida',()=>expect(assessTickFreshness(null,now).fresh).toBe(false))});

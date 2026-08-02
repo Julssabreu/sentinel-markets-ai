@@ -1,0 +1,16 @@
+import type { DecisionResult } from './decisionEngine';
+import type { MultiTimeframeAnalysis } from './multiTimeframeAnalysis';
+import type { AtomicAssessment } from './atomicConsensus';
+import type { TradePlan } from './tradePlan';
+import type { EnrichedNews } from './newsIntelligence';
+
+export interface JulssbotContext{symbol:string;decision:DecisionResult;multi:MultiTimeframeAnalysis;atomic:AtomicAssessment;plan:TradePlan;news:EnrichedNews[];freshness:string;historyCount:number;sources:string[]}
+const line=(value:string)=>`• ${value}`;
+export function answerJulssbot(question:string,context:JulssbotContext){
+ const q=question.toLowerCase();const contrary=context.multi.bias==='ALCISTA'?'bajista':context.multi.bias==='BAJISTA'?'alcista':'direccional';
+ if(q.includes('contrario')||q.includes('salir mal'))return[`Escenario contrario para ${context.symbol}:`,line(`La tesis ${context.multi.bias.toLowerCase()} pierde fuerza si las temporalidades rápidas cambian antes que H4–D1.`),line(`Actualmente hay ${context.multi.contradictions.length} contradicciones y alineación de ${context.multi.alignment}%.`),line(context.atomic.reason),line(context.plan.active&&context.plan.stop?`Invalidación cuantitativa: ${context.plan.stop}.`:'No existe una invalidación operativa porque Sentinel recomienda esperar.'),`No asumiré que el escenario ${contrary} es válido hasta que cambie la estructura.`].join('\n');
+ if(q.includes('atomic'))return[`Atomic Analyst MT5: ${context.atomic.agreement}.`,context.atomic.reason,context.atomic.signal?`Última señal: ${context.atomic.signal.type} · ${context.atomic.signal.symbol} · ${context.atomic.signal.timeframe}.`:'No hay una señal legible para este contexto.','Atomic es evidencia secundaria y no sustituye los controles de riesgo.'].join('\n');
+ if(q.includes('noticia')||q.includes('macro'))return context.news.length?[`Noticias relevantes para ${context.symbol}:`,...context.news.slice(0,5).map(x=>line(`${x.impact} · ${x.title} · ${x.source}`)),'Los titulares modifican la incertidumbre; no fijan por sí solos la dirección.'].join('\n'):`No encontré noticias recientes clasificadas para ${context.symbol}. Esto no demuestra ausencia de riesgo.`;
+ if(q.includes('plan')||q.includes('entrada')||q.includes('stop'))return context.plan.active?[`${context.symbol} · ${context.decision.decision.replaceAll('_',' ')}`,line(`Activación: ${context.plan.trigger}`),line(`Precio máximo: ${context.plan.maxEntry}`),line(`Stop/invalidation: ${context.plan.stop}`),line(`TP1: ${context.plan.tp1} · TP2: ${context.plan.tp2}`),line(`Caduca en ${context.plan.expiresAfterBars} velas.`),'La operación debe cancelarse si la cotización deja de estar fresca o aparece un evento bloqueante.'].join('\n'):`${context.symbol}: no existe un plan activo. ${context.decision.reasons.join(' ')}`;
+ return[`${context.symbol} · ${context.decision.decision.replaceAll('_',' ')}`,line(`Confianza protegida: ${context.decision.confidence}/100.`),line(`Sesgo ${context.multi.bias.toLowerCase()}, alineación ${context.multi.alignment}% y cobertura ${context.multi.available}/21.`),line(context.freshness),line(context.atomic.reason),...context.decision.reasons.slice(0,4).map(line),line(`${context.historyCount} análisis anteriores registrados para este activo.`),`Fuentes usadas: ${context.sources.join(', ')}.`].join('\n');
+}

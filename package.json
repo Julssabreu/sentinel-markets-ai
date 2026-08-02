@@ -1,0 +1,47 @@
+{
+  "name": "sentinel-markets-ai",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Centro de Análisis Financiero Personal Global",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "concurrently -k \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "start:local": "electron .",
+    "build": "tsc && vite build",
+    "test": "vitest run",
+    "preview": "vite preview",
+    "dist:local": "npm run build && electron-builder --win --dir",
+    "dist:win": "npm run build && electron-builder --win nsis"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "lucide-react": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "recharts": "latest"
+  },
+  "devDependencies": {
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "concurrently": "latest",
+    "electron": "latest",
+    "electron-builder": "latest",
+    "typescript": "latest",
+    "vite": "latest",
+    "vitest": "latest",
+    "wait-on": "latest"
+  },
+  "build": {
+    "appId": "com.julssbot.sentinelmarkets",
+    "productName": "Sentinel Markets AI",
+    "directories": { "output": "release" },
+    "files": ["dist/**/*", "electron/**/*", "shared/**/*", "package.json"],
+    "extraResources": [
+      { "from": "services", "to": "services" },
+      { "from": "integrations/mt5", "to": "integrations/mt5", "filter": ["SentinelAtomicReader.ex5"] }
+    ],
+    "win": { "target": "nsis" },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true }
+  }
+}
