@@ -21,7 +21,7 @@ async function fetchJson(url) {
   try {
     const response = await fetch(url, {
       signal: controller.signal,
-      headers: { 'User-Agent': 'Sentinel-Markets-AI/0.3.0' }
+      headers: { 'User-Agent': 'Sentinel-Markets-AI/0.3.1' }
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     return await response.json();
@@ -34,7 +34,7 @@ async function fetchText(url) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
-    const response = await fetch(url, { signal: controller.signal, headers: { 'User-Agent':'Sentinel-Markets-AI/0.3.0' } });
+    const response = await fetch(url, { signal: controller.signal, headers: { 'User-Agent':'Sentinel-Markets-AI/0.3.1' } });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     return await response.text();
   } finally { clearTimeout(timeout); }
